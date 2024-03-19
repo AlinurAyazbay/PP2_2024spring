@@ -21,18 +21,18 @@ img_left = pygame.transform.scale(img_left, (45, screen_h))
 img_right = pygame.image.load('lab7/IMG_6053.PNG')
 img_right = pygame.transform.scale(img_right, (screen_w, screen_h))
 
-def print_img_by_degree(image, degree): # function for drawing image by given degree
-    image = pygame.transform.rotate(image, degree) # at first rotate
-    rect = image.get_rect() # create rect object with legth same with image
-    rect.center = win.get_rect().center # sets center coord ro rect object
-    win.blit(image, rect) # draw image onto win in the position defined by rect
+def print_img_by_degree(image, degree):
+    image = pygame.transform.rotate(image, degree) 
+    rect = image.get_rect() 
+    rect.center = win.get_rect().center 
+    win.blit(image, rect) 
 
-def print_time(): # unnecessary
+def print_time():
     font = pygame.font.Font('mouse\\Alice-Regular.ttf', 40)
     text = font.render(f'{minute//10}{minute%10}:{second//10}{second%10}', True, (169, 169, 169))
     win.blit(text, (screen_w-100, screen_h-50))
 
-def play_tick(): # unnecessary
+def play_tick():
     music = pygame.mixer.music.load('lab7/JPEG image-4591-9ECA-58-0.jpeg')
     pygame.mixer.music.play()
 play_tick()
