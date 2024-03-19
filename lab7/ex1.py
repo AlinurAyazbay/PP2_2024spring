@@ -1,46 +1,54 @@
 import pygame
-import sys
-from datetime import datetime
+from time import localtime as now 
 pygame.init()
-window_width = 400
-window_height = 400
-window = pygame.display.set_mode((window_width, window_height))
-pygame.display.set_caption("Mickey Clock")
+minute = second = 0
 
-mickey_image = pygame.image.load('lab7/JPEG image-4591-9ECA-58-0.jpeg')
-mickey_rect = mickey_image.get_rect(center=(window_width // 2, window_height // 2))
+def get_time():
+    global minute, second
+    minute, second = now().tm_min, now().tm_sec
+get_time()
 
-clock_center = (window_width // 2, window_height // 2)
-minute_length = 100
-second_length = 150
-hour_length = 80
+screen_h = 675
+screen_w = 900
+win = pygame.display.set_mode((screen_w, screen_h))
+pygame.display.set_caption('Mouse')
 
-running = True
-while running:
+
+img_main = pygame.image.load('lab7/IMG_6054.JPG')
+img_main = pygame.transform.scale(img_main, (screen_w, screen_h))
+img_left = pygame.image.load('lab7/IMG_6056.PNG')
+img_left = pygame.transform.scale(img_left, (45, screen_h))
+img_right = pygame.image.load('lab7/IMG_6053.PNG')
+img_right = pygame.transform.scale(img_right, (screen_w, screen_h))
+
+def print_img_by_degree(image, degree): # function for drawing image by given degree
+    image = pygame.transform.rotate(image, degree) # at first rotate
+    rect = image.get_rect() # create rect object with legth same with image
+    rect.center = win.get_rect().center # sets center coord ro rect object
+    win.blit(image, rect) # draw image onto win in the position defined by rect
+
+def print_time(): # unnecessary
+    font = pygame.font.Font('mouse\\Alice-Regular.ttf', 40)
+    text = font.render(f'{minute//10}{minute%10}:{second//10}{second%10}', True, (169, 169, 169))
+    win.blit(text, (screen_w-100, screen_h-50))
+
+def play_tick(): # unnecessary
+    music = pygame.mixer.music.load('lab7/JPEG image-4591-9ECA-58-0.jpeg')
+    pygame.mixer.music.play()
+play_tick()
+
+clock = pygame.time.Clock()
+run = 1
+
+while run:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    window.fill((255, 255, 255))
-
-    current_time = datetime.now().time()
-    hours = current_time.hour
-    minutes = current_time.minute
-    seconds = current_time.second
-
-    window.blit(mickey_image, mickey_rect)
-
-    minute_angle = (minutes / 60) * 360 - 90
-    minute_hand_end = (clock_center[0] + minute_length * pygame.math.Vector2().from_polar((1, minute_angle)),
-                       clock_center[1])
-    pygame.draw.line(window, (0, 0, 0), clock_center, minute_hand_end, 5)
-
-    second_angle = (seconds / 60) * 360 - 90
-    second_hand_end = (clock_center[0] + second_length * pygame.math.Vector2().from_polar((1, second_angle)),
-                       clock_center[1])
-    pygame.draw.line(window, (255, 0, 0), clock_center, second_hand_end, 2)
-    pygame.display.flip()
-    pygame.time.Clock().tick(60)
-
-pygame.quit()
-sys.exit()
+        if event.type == pygame.QUIT: run = 0
+    win.blit(img_main, (0, 0))
+    get_time()
+    if not pygame.mixer.music.get_busy(): play_tick() # unnecessary
+    print_img_by_degree(img_left, -second*6 - (0.7 if second>30 else +1.2)) #-0.7/-1.2 used to normalize line
+    print_img_by_degree(img_right, -minute*6 -40) #-40 used to normalize line
+    
+    print_time()
+    pygame.display.update()
+    clock.tick(60)
