@@ -22,7 +22,7 @@ class Wall:
         self.body = []
         self.list = []
 
-        f = open("/Users/temirbekboltay/Desktop/lab-8/snake/level_{}.txt".format(level), "r")
+        f = open("lab-8/snake/level_0.txt".format(level), "r")
         
         for y in range(0, HEIGHT//BLOCK_SIZE + 1):
             for x in range(0, WIDTH//BLOCK_SIZE + 1):
